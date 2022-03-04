@@ -1,11 +1,17 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Typography, Space } from "antd";
+import { Typography, Menu, Layout } from "antd";
+import { HomeOutlined } from "@ant-design/icons";
+
+import Sidebar from "../components/Sidebar"
+
 const { Title, Paragraph, Text, Link } = Typography;
+const { Header, Content, Sider } = Layout;
+const { SubMenu } = Menu;
 
 export default function Home() {
   return (
-    <div>
+    <>
       <Head>
         <title>Canvas Alternative</title>
         <meta
@@ -14,18 +20,23 @@ export default function Home() {
         />
       </Head>
 
-      <main>
-        <Space direction="vertical" size="large" style={{padding: "1rem"}}>
-          <Typography>
-            <Title>Hi!</Title>
-            <Paragraph>
-              This is a simple alternative to Instructure's Canvas using react.
-            </Paragraph>
-          </Typography>
-        </Space>
-      </main>
-
-      <footer></footer>
-    </div>
+      <Layout className="body">
+        <Header>
+          <HomeOutlined style={{ color: "white" }} />
+        </Header>
+        <Layout>
+          <Sidebar />
+          <Content>
+            <Typography style={{ padding: "0.5rem" }}>
+              <Title>This is a canvas alternative</Title>
+              <Paragraph>It is build using ant design and react</Paragraph>
+              <Title level={1}>
+                Canvas design leaves some things to be desired
+              </Title>
+            </Typography>
+          </Content>
+        </Layout>
+      </Layout>
+    </>
   );
 }

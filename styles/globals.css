@@ -1,0 +1,11 @@
+.ant-layout-sider-children {
+  margin: 0;
+}
+
+.body  {
+  min-height: 100vh;
+}
+
+body, #__next {
+  min-height: 100%;
+}
