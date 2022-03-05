@@ -1,15 +1,31 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Typography, Menu, Layout } from "antd";
+import { Typography, Menu, Layout, Card, Space } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
 
 import Sidebar from "../components/Sidebar"
+import { useState, useEffect } from 'react';
 
 const { Title, Paragraph, Text, Link } = Typography;
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default function Home() {
+  const [data, setData] = useState({data: []})
+  useEffect(() => {
+    if (data.data == []) {
+      fetch("/api/courses", {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+          url: "/courses",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setData(data));
+    }
+  })
+  // TODO: Make fill work on mobile
+  console.log(data)
   return (
     <>
       <Head>
@@ -27,13 +43,9 @@ export default function Home() {
         <Layout>
           <Sidebar />
           <Content>
-            <Typography style={{ padding: "0.5rem" }}>
-              <Title>This is a canvas alternative</Title>
-              <Paragraph>It is build using ant design and react</Paragraph>
-              <Title level={1}>
-                Canvas design leaves some things to be desired
-              </Title>
-            </Typography>
+            <Space style={{ width: "100%", padding: "10px" }} wrap>
+              {data.data.map((item) => <Card key={item.id} title={item.name} style={{ width: "300px"}} />)}
+            </Space>
           </Content>
         </Layout>
       </Layout>
