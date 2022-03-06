@@ -15,7 +15,5 @@ export default function useAPI(key, url) {
     }
   });
 
-  console.log(data)
-
   return data
 }

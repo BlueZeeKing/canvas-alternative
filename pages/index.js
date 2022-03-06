@@ -11,7 +11,6 @@ export default function Home() {
     "/courses?per_page=50&enrollment_state=active&state=available&include=favorites"
   );
   // TODO: Make fill work on mobile
-  console.log(courses);
   let body;
   if (Object.keys(courses).length == 0) {
     body = [1, 2, 3, 4, 5, 6, 7].map((item) => (
@@ -24,8 +23,8 @@ export default function Home() {
       </Card>
     ));
   } else {
-    body = courses.data.map((item) => (
-      <Link key={item.id} href={`/course/${item.id}`} passHref>
+    body = courses.data.filter(item => item.is_favorite).map((item) => (
+      <Link key={item.id} href={`/course/${item.id}?title=${item.name}`} passHref>
         <Card title={item.name} style={{ width: "300px", minHeight: "150px" }}>
           <p style={{ margin: 0 }}>{item.course_code}</p>
         </Card>
@@ -36,7 +35,7 @@ export default function Home() {
     <>
       <Header />
 
-      <Main>
+      <Main title="Dashboard">
         <Space style={{ width: "100%", padding: "10px" }} wrap>
           {body}
         </Space>

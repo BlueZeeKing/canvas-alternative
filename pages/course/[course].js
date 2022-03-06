@@ -12,21 +12,21 @@ const parser = new Parser();
 export default function App() {
   const router = useRouter();
   // TODO: pass the course data along
-  let courses = useAPI(
+  let home_page = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/front_page`
   );
-  console.log(courses)
+  console.log(router.query);
   return (
     <>
       <Header />
 
-      <Main>
+      <Main title={router.query.title}>
         <div style={{ padding: "10px" }}>
-          {Object.keys(courses).length != 0 ? (
-            parser.parse(courses.data.body)
+          {Object.keys(home_page).length != 0 ? (
+            parser.parse(home_page.data.body)
           ) : (
-            <Skeleton />
+            <Skeleton active />
           )}
         </div>
       </Main>
