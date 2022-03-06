@@ -14,7 +14,7 @@ export default function Main(props) {
       </Header>
       <Layout>
         <Sidebar />
-        <Content style={{overflow: "scroll"}}>{props.children}</Content>
+        <Content style={{overflowY: "scroll"}}>{props.children}</Content>
       </Layout>
     </Layout>
   );

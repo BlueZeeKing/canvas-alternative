@@ -1,12 +1,9 @@
-import Head from 'next/head'
-import Image from 'next/image'
 import Link from "next/link";
-import { Typography, Menu, Layout, Card, Space, Skeleton } from "antd";
-import { HomeOutlined } from "@ant-design/icons";
-import Main from "../components/Main";
+import { Card, Space, Skeleton } from "antd";
 
+import Main from "../components/Main";
 import useAPI from "../hooks/useAPI"
-import { useState, useEffect } from 'react';
+import Header from "../components/Header";
 
 export default function Home() {
   let courses = useAPI(
@@ -37,13 +34,7 @@ export default function Home() {
   }
   return (
     <>
-      <Head>
-        <title>Canvas Alternative</title>
-        <meta
-          name="description"
-          content="Alternative to Instructure's Canvas using react"
-        />
-      </Head>
+      <Header />
 
       <Main>
         <Space style={{ width: "100%", padding: "10px" }} wrap>
