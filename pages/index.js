@@ -1,31 +1,40 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { Typography, Menu, Layout, Card, Space } from "antd";
+import Link from "next/link";
+import { Typography, Menu, Layout, Card, Space, Skeleton } from "antd";
 import { HomeOutlined } from "@ant-design/icons";
+import Main from "../components/Main";
 
-import Sidebar from "../components/Sidebar"
+import useAPI from "../hooks/useAPI"
 import { useState, useEffect } from 'react';
 
-const { Title, Paragraph, Text, Link } = Typography;
-const { Header, Content, Sider } = Layout;
-const { SubMenu } = Menu;
-
 export default function Home() {
-  const [data, setData] = useState({data: []})
-  useEffect(() => {
-    if (data.data == []) {
-      fetch("/api/courses", {
-        headers: {
-          Authorization: `Bearer ${process.env.API_KEY}`,
-          url: "/courses",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => setData(data));
-    }
-  })
+  let courses = useAPI(
+    process.env.API_KEY,
+    "/courses?per_page=50&enrollment_state=active&state=available&include=favorites"
+  );
   // TODO: Make fill work on mobile
-  console.log(data)
+  console.log(courses);
+  let body;
+  if (Object.keys(courses).length == 0) {
+    body = [1, 2, 3, 4, 5, 6, 7].map((item) => (
+      <Card
+        key={item}
+        title={<Skeleton active paragraph={false} />}
+        style={{ width: "300px", minHeight: "150px" }}
+      >
+        <Skeleton active title={false} />
+      </Card>
+    ));
+  } else {
+    body = courses.data.map((item) => (
+      <Link key={item.id} href={`/course/${item.id}`} passHref>
+        <Card title={item.name} style={{ width: "300px", minHeight: "150px" }}>
+          <p style={{ margin: 0 }}>{item.course_code}</p>
+        </Card>
+      </Link>
+    ));
+  }
   return (
     <>
       <Head>
@@ -36,19 +45,11 @@ export default function Home() {
         />
       </Head>
 
-      <Layout className="body">
-        <Header>
-          <HomeOutlined style={{ color: "white" }} />
-        </Header>
-        <Layout>
-          <Sidebar />
-          <Content>
-            <Space style={{ width: "100%", padding: "10px" }} wrap>
-              {data.data.map((item) => <Card key={item.id} title={item.name} style={{ width: "300px"}} />)}
-            </Space>
-          </Content>
-        </Layout>
-      </Layout>
+      <Main>
+        <Space style={{ width: "100%", padding: "10px" }} wrap>
+          {body}
+        </Space>
+      </Main>
     </>
   );
 }
