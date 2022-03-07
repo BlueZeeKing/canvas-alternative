@@ -8,8 +8,15 @@ import Header from "../components/Header";
 export default function Home() {
   let courses = useAPI(
     process.env.API_KEY,
-    "/courses?per_page=50&enrollment_state=active&state=available&include=favorites"
+    "/courses",
+    [
+      ["per_page", 50],
+      ["enrollment_state", "active"],
+      ["state", "available"],
+      ["include", "favorites"],
+    ]
   );
+  console.log(courses);
   // TODO: Make fill work on mobile
   let body;
   if (Object.keys(courses).length == 0) {
@@ -23,13 +30,22 @@ export default function Home() {
       </Card>
     ));
   } else {
-    body = courses.data.filter(item => item.is_favorite).map((item) => (
-      <Link key={item.id} href={`/${item.id}/main?title=${item.name}`} passHref>
-        <Card title={item.name} style={{ width: "300px", minHeight: "150px", cursor:"pointer" }}>
-          <p style={{ margin: 0 }}>{item.course_code}</p>
-        </Card>
-      </Link>
-    ));
+    body = courses.data
+      .filter((item) => item.is_favorite)
+      .map((item) => (
+        <Link
+          key={item.id}
+          href={`/${item.id}/${item.default_view}?title=${item.name}`}
+          passHref
+        >
+          <Card
+            title={item.name}
+            style={{ width: "300px", minHeight: "150px", cursor: "pointer" }}
+          >
+            <p style={{ margin: 0 }}>{item.course_code}</p>
+          </Card>
+        </Link>
+      ));
   }
   return (
     <>

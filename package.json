@@ -15,7 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.1.17",
     "antd": "^4.18.9",
     "axios": "^0.26.0",
-    "html-to-react": "^1.4.8",
+    "dompurify": "^2.3.6",
     "install": "^0.13.0",
     "next": "12.1.0",
     "npm": "^8.5.3",

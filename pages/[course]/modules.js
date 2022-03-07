@@ -12,7 +12,8 @@ export default function App() {
   // TODO: pass the course data along
   let modules = useAPI(
     process.env.API_KEY,
-    `/courses/${router.query.course}/modules?include=items`
+    `/courses/${router.query.course}/modules`,
+    [["include", "items"]]
   );
   let body;
   // TODO: make menu item group actually surround the items
@@ -50,15 +51,23 @@ function convertToItemGroup(list) {
   }
   list.items.forEach(item => {
     if (item.type == "SubHeader") {
-      temp.push(
-        <Menu.ItemGroup key={temp_item.id} title={temp_item.title}>
-          {group_temp}
-        </Menu.ItemGroup>
-      );
+      if (temp_item.id == 0) {
+        temp.push(
+          <>
+            {group_temp}
+          </>
+        )
+      } else {
+        temp.push(
+          <Menu.ItemGroup key={temp_item.id} title={temp_item.title}>
+            {group_temp}
+          </Menu.ItemGroup>
+        );
+      }
       group_temp = []
       temp_item = item
     } else {
-      group_temp.push(<Menu.Item key={item.id} style={{marginLeft: `${24*item.indent}px`}}>{item.title}</Menu.Item>);
+      group_temp.push(<Menu.Item key={item.id} style={{paddingLeft: `${24*item.indent+48}px`}}>{item.title}</Menu.Item>);
     }
   });
 
