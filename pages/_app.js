@@ -3,7 +3,7 @@ import "../styles/globals.css"
 import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
+  /*useEffect(() => {
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
         navigator.serviceWorker.register("/sw.js").then(
@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }) {
         );
       });
     }
-  }, []);
+  }, []);*/
 
   return <Component {...pageProps} />;
 }

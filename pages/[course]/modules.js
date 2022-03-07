@@ -29,7 +29,11 @@ export default function App() {
           ))}
         </Menu>
       );
+    } else {
+      body = <Skeleton active />;
     }
+  } else {
+    body = <Skeleton active />;
   }
   return (
     <>

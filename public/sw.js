@@ -10,8 +10,9 @@ self.addEventListener("install", event => {
   );
 });
 
-self.addEventListener("activate", (event) => {
-  // Remove old caches
+self.addEventListener("activate", (event) => { // TODO: clear old cache
+  // Remove old caches 
+  console.log("activate")
   event.waitUntil(
     caches.delete(CACHE_NAME)
   );
@@ -28,7 +29,7 @@ self.addEventListener("fetch", function (event) {
       }
 
       return fetch(event.request).then(function (response) {
-        console.log("nothing")
+        console.log("fetch")
         if (!response || response.status !== 200 || response.type !== "basic") {
           return response;
         }
