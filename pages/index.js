@@ -24,8 +24,8 @@ export default function Home() {
     ));
   } else {
     body = courses.data.filter(item => item.is_favorite).map((item) => (
-      <Link key={item.id} href={`/course/${item.id}?title=${item.name}`} passHref>
-        <Card title={item.name} style={{ width: "300px", minHeight: "150px" }}>
+      <Link key={item.id} href={`/${item.id}/main?title=${item.name}`} passHref>
+        <Card title={item.name} style={{ width: "300px", minHeight: "150px", cursor:"pointer" }}>
           <p style={{ margin: 0 }}>{item.course_code}</p>
         </Card>
       </Link>
