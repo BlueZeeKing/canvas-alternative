@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { Skeleton, Menu } from "antd";
+import Link from "next/link";
 
 const { SubMenu } = Menu;
 
@@ -19,12 +20,19 @@ export default function App() {
   // TODO: make menu item group actually surround the items
   if (Object.keys(modules).length != 0) {
     if (!("errors" in modules.data)) {
-      console.log(convertToItemGroup(modules.data[1]));
       body = (
         <Menu mode="inline">
           {modules.data.map((module) => (
             <SubMenu key={module.id} title={module.name}>
-              {convertToItemGroup(module)}
+              {module.items.map((item) => {
+                if (item.type == "SubHeader") {
+                  return <Menu.ItemGroup key={item.id} title={item.title} />;
+                } else if (item.type == "Assignment") {
+                  return <Menu.Item key={item.id} style={{ paddingLeft: `${24 * item.indent + 48}px` }}><Link href={`/${router.query.course}/assignment/${item.content_id}?title=Algebra`}>{item.title}</Link></Menu.Item>
+                } else {
+                  return <Menu.Item key={item.id} style={{ paddingLeft: `${24 * item.indent + 48}px` }}><Link href="/">{item.title}</Link></Menu.Item>
+                }
+              })}
             </SubMenu>
           ))}
         </Menu>
@@ -46,40 +54,12 @@ export default function App() {
   );
 }
 
-function convertToItemGroup(list) {
-  let temp = []
-  let group_temp = []
-  let temp_item = {
-    title: "",
-    id: 0
-  }
-  list.items.forEach(item => {
-    if (item.type == "SubHeader") {
-      if (temp_item.id == 0) {
-        temp.push(
-          <>
-            {group_temp}
-          </>
-        )
-      } else {
-        temp.push(
-          <Menu.ItemGroup key={temp_item.id} title={temp_item.title}>
-            {group_temp}
-          </Menu.ItemGroup>
-        );
-      }
-      group_temp = []
-      temp_item = item
-    } else {
-      group_temp.push(<Menu.Item key={item.id} style={{paddingLeft: `${24*item.indent+48}px`}}>{item.title}</Menu.Item>);
-    }
-  });
-
-  temp.push(
-    <Menu.ItemGroup key={temp_item.id} title={temp_item.title}>
-      {group_temp}
-    </Menu.ItemGroup>
+function Item(props) {
+  return (
+      <Menu.Item key={props.id} style={{ paddingLeft: `${24 * props.item.indent + 48}px` }}>
+        <Link href={props.url}>
+          {props.item.title}
+        </Link>
+      </Menu.Item>
   );
-
-  return temp
 }

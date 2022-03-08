@@ -4,7 +4,7 @@ export default function useAPI(key, url, query) {
   const [data, setData] = useState({})
   
   useEffect(() => {
-    if (Object.keys(data).length == 0) {
+    if (Object.keys(data).length == 0 && !url.includes("undefined")) {
       fetch(`/api/canvas?url=${url}`, {
         headers: {
           Authorization: `Bearer ${key}`,

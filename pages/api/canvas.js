@@ -7,7 +7,7 @@ export default async function handler(request, response) {
       },
     }
   );
-
+  
   const data = await res.json();
   return response.status(res.status).json({ data });
 }
