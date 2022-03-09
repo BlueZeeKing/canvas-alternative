@@ -28,7 +28,7 @@ export default function App() {
                 if (item.type == "SubHeader") {
                   return <Menu.ItemGroup key={item.id} title={item.title} />;
                 } else if (item.type == "Assignment") {
-                  return <Menu.Item key={item.id} style={{ paddingLeft: `${24 * item.indent + 48}px` }}><Link href={`/${router.query.course}/assignment/${item.content_id}?title=Algebra`}>{item.title}</Link></Menu.Item>
+                  return <Menu.Item key={item.id} style={{ paddingLeft: `${24 * item.indent + 48}px` }}><Link href={`/${router.query.course}/assignment/${item.content_id}?title=${router.query.title}`}>{item.title}</Link></Menu.Item>
                 } else {
                   return <Menu.Item key={item.id} style={{ paddingLeft: `${24 * item.indent + 48}px` }}><Link href="/">{item.title}</Link></Menu.Item>
                 }
@@ -51,15 +51,5 @@ export default function App() {
         <div style={{ padding: "10px" }}>{body}</div>
       </Main>
     </>
-  );
-}
-
-function Item(props) {
-  return (
-      <Menu.Item key={props.id} style={{ paddingLeft: `${24 * props.item.indent + 48}px` }}>
-        <Link href={props.url}>
-          {props.item.title}
-        </Link>
-      </Menu.Item>
   );
 }

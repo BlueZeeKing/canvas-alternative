@@ -33,7 +33,7 @@ export default function App() {
         <div
           style={{ padding: "10px" }}
         >
-          {cleanHTML == "" ? <Skeleton active /> : <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>}
+          {Object.keys(assignment).length == 0 ? <Skeleton active /> : <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>}
         </div>
       </Main>
     </>

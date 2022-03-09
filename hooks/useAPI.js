@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { notification } from "antd";
 
 export default function useAPI(key, url, query) {
   const [data, setData] = useState({})
@@ -12,7 +13,15 @@ export default function useAPI(key, url, query) {
           query: JSON.stringify(query),
         },
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (parseInt(res.headers.get("x-rate-limit-remaining")) < 50) {
+            notification.warning({
+              message: "Please Slow Down",
+              description: `You are currently using ${700 - parseInt(res.headers.get("x-rate-limit-remaining"))} out of 700 of your alloted quota. Please slow down.`,
+            });
+          }
+          return res.json();
+        })
         .then((data) => setData(data));
     }
   });

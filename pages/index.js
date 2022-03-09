@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Card, Space, Skeleton } from "antd";
+import { Card, Space, Skeleton, notification } from "antd";
 
 import Main from "../components/Main";
 import useAPI from "../hooks/useAPI"
