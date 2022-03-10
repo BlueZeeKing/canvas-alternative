@@ -1,15 +1,17 @@
 import { useRouter } from "next/router";
-import { Skeleton, Menu, Typography } from "antd";
-
-const { Title } = Typography;
+import { Skeleton, Menu } from "antd";
 
 import Main from "../../components/Main";
 import Header from "../../components/Header";
 import useAPI from "../../hooks/useAPI";
+import useSessionStorage from "../../hooks/useSessionStorage";
 
 export default function App() {
   const router = useRouter();
-  // TODO: pass the course data along
+  const [storage, set, reset] = useSessionStorage();
+
+  set("Assignments", `/${router.query.course}/wiki?title=${router.query.title}`, 2);
+
   let assignments = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/assignments`,

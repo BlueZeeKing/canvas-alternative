@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
-import { Skeleton, Menu } from "antd";
-import Link from "next/link";
+import { Skeleton, Typography, Divider } from "antd";
 import DOMPurify from "dompurify";
 
-const { SubMenu } = Menu;
+const { Title } = Typography;
 
 import Main from "../../../components/Main";
 import Header from "../../../components/Header";
@@ -17,11 +16,23 @@ export default function App() {
     `/courses/${router.query.course}/assignments/${router.query.assignment}`,
     [["include", "items"]]
   );
-  let cleanHTML = "";
+  let body;
   if (Object.keys(assignment).length != 0) {
-    cleanHTML = DOMPurify.sanitize(assignment.data.description, {
-      USE_PROFILES: { html: true },
-    });
+    body = (
+      <>
+        <Title>{assignment.data.name}</Title>
+        <Divider />
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(assignment.data.description, {
+              USE_PROFILES: { html: true },
+            }),
+          }}
+        ></div>
+      </>
+    );
+  } else {
+    body = <Skeleton active />;
   }
   console.log(assignment);
   // TODO: make menu item group actually surround the items
@@ -29,12 +40,8 @@ export default function App() {
     <>
       <Header />
 
-      <Main title={router.query.title}>
-        <div
-          style={{ padding: "10px" }}
-        >
-          {Object.keys(assignment).length == 0 ? <Skeleton active /> : <div dangerouslySetInnerHTML={{ __html: cleanHTML }}></div>}
-        </div>
+      <Main title={router.query.title} page>
+        <div style={{ padding: "10px" }}>{body}</div>
       </Main>
     </>
   );

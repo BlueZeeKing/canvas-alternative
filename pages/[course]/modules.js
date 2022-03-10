@@ -1,15 +1,18 @@
 import { useRouter } from "next/router";
 import { Skeleton, Menu } from "antd";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const { SubMenu } = Menu;
 
 import Main from "../../components/Main";
 import Header from "../../components/Header";
 import useAPI from "../../hooks/useAPI";
+import useSessionStorage from "../../hooks/useSessionStorage";
 
 export default function App() {
   const router = useRouter();
+  const [storage, set, reset] = useSessionStorage();
   // TODO: pass the course data along
   let modules = useAPI(
     process.env.API_KEY,
@@ -17,6 +20,7 @@ export default function App() {
     [["include", "items"]]
   );
   let body;
+  set("Modules", `/${router.query.course}/modules?title=${router.query.title}`, 2);
   // TODO: make menu item group actually surround the items
   if (Object.keys(modules).length != 0) {
     if (!("errors" in modules.data)) {
