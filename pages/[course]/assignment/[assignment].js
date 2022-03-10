@@ -7,10 +7,12 @@ const { Title } = Typography;
 import Main from "../../../components/Main";
 import Header from "../../../components/Header";
 import useAPI from "../../../hooks/useAPI";
+import useSessionStorage from "../../../hooks/useSessionStorage";
 
 export default function App() {
   const router = useRouter();
-  // TODO: pass the course data along
+  const [storage, set, reset] = useSessionStorage();
+  set("Assignment", `/${router.query.course}/assignment/${router.query.assignment}?title=${router.query.title}`, 3); //TODO: make the name show up
   let assignment = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/assignments/${router.query.assignment}`,

@@ -51,7 +51,7 @@ export default function App() {
     <>
       <Header />
 
-      <Main title={router.query.title}>
+      <Main title={router.query.title} course={router.query.course}>
         <div style={{ padding: "10px" }}>{body}</div>
       </Main>
     </>

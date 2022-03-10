@@ -35,7 +35,7 @@ export default function Main(props) {
         </Space>
       </Header>
       <Layout>
-        <Sidebar />
+        <Sidebar course={props.course} name={props.title} />
         <div
           style={{
             overflowY: "scroll",
@@ -56,7 +56,7 @@ export default function Main(props) {
           )}
           <Content
             style={{
-              width: "100%"
+              width: "100%",
             }}
           >
             {props.children}

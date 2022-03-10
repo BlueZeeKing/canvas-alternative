@@ -26,7 +26,7 @@ export default function App() {
     <>
       <Header />
 
-      <Main title={router.query.title} page>
+      <Main title={router.query.title} page course={router.query.course}>
         <div style={{ padding: "10px" }}>
           {Object.keys(home_page).length != 0 ? (
             <div dangerouslySetInnerHTML={{ __html: cleanHTML }} ></div>

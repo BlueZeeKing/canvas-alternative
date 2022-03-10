@@ -60,6 +60,7 @@ export default function Home() {
             }}
           >
             <p style={{ margin: 0 }}>{item.course_code}</p>
+            <p style={{ margin: 0 }}>{item.public_description}</p>
           </Card>
         </Link>
       ));
