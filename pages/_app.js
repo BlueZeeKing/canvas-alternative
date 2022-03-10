@@ -1,5 +1,5 @@
-import "antd/dist/antd.css";
 import "../styles/globals.css"
+import "antd/dist/antd.dark.css";
 import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {

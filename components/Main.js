@@ -1,4 +1,4 @@
-import { Layout, Typography, Space, Breadcrumb } from "antd";
+import { Layout, Typography, Space, Breadcrumb, BackTop } from "antd";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSchool } from "@fortawesome/free-solid-svg-icons";
@@ -40,19 +40,23 @@ export default function Main(props) {
           style={{
             overflowY: "scroll",
             padding: "10px",
-            backgroundColor: "#f0f2f5",
             width: "100%",
           }}
         >
-          {
-          !props.breadcrumb ? <Breadcrumb style={{ paddingBottom: "10px" }}>
-            {storage.map((item, index) => (<Breadcrumb.Item key={index}><Link href={item[1]}>{item[0]}</Link></Breadcrumb.Item>))}
-          </Breadcrumb> : ""
-          }
+          {!props.breadcrumb ? (
+            <Breadcrumb style={{ paddingBottom: "10px" }}>
+              {storage.map((item, index) => (
+                <Breadcrumb.Item key={index}>
+                  <Link href={item[1]}>{item[0]}</Link>
+                </Breadcrumb.Item>
+              ))}
+            </Breadcrumb>
+          ) : (
+            ""
+          )}
           <Content
             style={{
-              width: "100%",
-              backgroundColor: props.page ? "white" : "#f0f2f5",
+              width: "100%"
             }}
           >
             {props.children}
