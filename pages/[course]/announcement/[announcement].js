@@ -14,26 +14,27 @@ export default function App() {
   const router = useRouter();
   const [storage, set, reset] = useSessionStorage();
 
-  useEffect(() => set("Assignment", `/${router.query.course}/assignment/${router.query.assignment}?title=${router.query.title}`, 3), []);
+  useEffect(() => set("Announcement", `/${router.query.course}/announcement/${router.query.announcement}?title=${router.query.title}`, 3), []);
 
-  let assignment = useAPI(
+  let announcement = useAPI(
     process.env.API_KEY,
-    `/courses/${router.query.course}/assignments/${router.query.assignment}`,
+    `/courses/${router.query.course}/discussion_topics/${router.query.announcement}`,
     [["include", "items"]]
   );
+  console.log(announcement);
 
   let body;
-  if (Object.keys(assignment).length != 0) {
-    if (storage[3][0] == "Assignment") {
-      set(assignment.data.name, `/${router.query.course}/assignment/${router.query.assignment}?title=${router.query.title}`, 3);
+  if (Object.keys(announcement).length != 0) {
+    if (storage[3][0] == "Announcement") {
+      set(announcement.data.title, `/${router.query.course}/announcement/${router.query.announcement}?title=${router.query.title}`, 3);
     }
     body = (
       <>
-        <Title>{assignment.data.name}</Title>
+        <Title>{announcement.data.title}</Title>
         <Divider />
         <div
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(assignment.data.description, {
+            __html: DOMPurify.sanitize(announcement.data.message, {
               USE_PROFILES: { html: true },
             }),
           }}

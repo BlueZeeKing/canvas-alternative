@@ -7,7 +7,6 @@ export default async function handler(request, response) {
       },
     }
   );
-  
   const data = await res.json();
   response.setHeader("x-rate-limit-remaining", res.headers.get("x-rate-limit-remaining"))
   return response.status(res.status).json({ data });

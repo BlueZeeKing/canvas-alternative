@@ -40,7 +40,7 @@ export default function Main(props) {
             width: "100%",
           }}
         >
-          {!props.breadcrumb ? (
+          {!props.breadcrumb && props.history ? (
             <Breadcrumb style={{ paddingBottom: "10px" }}>
               {props.history.map((item, index) => (
                 <Breadcrumb.Item key={index}>

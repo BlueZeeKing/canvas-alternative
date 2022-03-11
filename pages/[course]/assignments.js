@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { Skeleton, Menu } from "antd";
+import Link from "next/link";
 
 import { useEffect } from "react";
 
@@ -17,17 +18,18 @@ export default function App() {
   let assignments = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/assignments`,
-    [["include", ""]]
+    [["per_page", "80"]]
   );
   let body;
   // TODO: make menu item group actually surround the items
+  console.log(assignments);
   if (Object.keys(assignments).length != 0) {
     if (!("errors" in assignments.data)) {
       body = (
         <Menu mode="inline">
           <Menu.ItemGroup title="Assignments">
             {assignments.data.map((assignment) => (
-              <Menu.Item key={assignment.id}>{assignment.name}</Menu.Item>
+              <Menu.Item key={assignment.id}><Link href={`/${router.query.course}/assignment/${assignment.id}?title=${router.query.title}`}>{assignment.name}</Link></Menu.Item>
             ))}
           </Menu.ItemGroup>
         </Menu>
