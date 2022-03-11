@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { Skeleton, Menu } from "antd";
 
+import { useEffect } from "react";
+
 import Main from "../../components/Main";
 import Header from "../../components/Header";
 import useAPI from "../../hooks/useAPI";
@@ -10,7 +12,7 @@ export default function App() {
   const router = useRouter();
   const [storage, set, reset] = useSessionStorage();
 
-  set("Assignments", `/${router.query.course}/wiki?title=${router.query.title}`, 2);
+  useEffect(() => set("Assignments", `/${router.query.course}/assignments?title=${router.query.title}`, 2), []);
 
   let assignments = useAPI(
     process.env.API_KEY,
@@ -40,7 +42,7 @@ export default function App() {
     <>
       <Header />
 
-      <Main title={router.query.title} course={router.query.course}>
+      <Main history={storage} title={router.query.title} course={router.query.course}>
         <div style={{ padding: "10px" }}>{body}</div>
       </Main>
     </>

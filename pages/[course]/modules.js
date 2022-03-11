@@ -20,7 +20,7 @@ export default function App() {
     [["include", "items"]]
   );
   let body;
-  set("Modules", `/${router.query.course}/modules?title=${router.query.title}`, 2);
+  useEffect(() => set("Modules", `/${router.query.course}/modules?title=${router.query.title}`, 2), []);
   // TODO: make menu item group actually surround the items
   if (Object.keys(modules).length != 0) {
     if (!("errors" in modules.data)) {
@@ -51,7 +51,7 @@ export default function App() {
     <>
       <Header />
 
-      <Main title={router.query.title} course={router.query.course}>
+      <Main history={storage} title={router.query.title} course={router.query.course}>
         <div style={{ padding: "10px" }}>{body}</div>
       </Main>
     </>

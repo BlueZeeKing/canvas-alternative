@@ -23,10 +23,7 @@ export default function Home() {
 
   const [storage, set, reset] = useSessionStorage();
 
-  useEffect(() => {
-    reset([["Home", "/"]]);
-    console.log("set")
-  })
+  useEffect(() => reset([["Home", "/"]]), [])
   // TODO: Make fill work on mobile
   let body;
   if (Object.keys(courses).length == 0) {
@@ -69,7 +66,7 @@ export default function Home() {
     <>
       <Header />
 
-      <Main title="Dashboard" breadcrumb>
+      <Main history={storage} title="Dashboard" breadcrumb>
         <Space style={{ width: "100%", padding: "10px" }} wrap>
           {body}
         </Space>

@@ -3,23 +3,20 @@ import { useState, useEffect } from "react";
 export default function useSessionStorage() {
   const [storage, setStorage] = useState([]);
 
-  useEffect(() => {
-    setStorage(JSON.parse(window.sessionStorage.getItem("history")));
-  }, []);
-
   function set(name, url, level) {
-    try {
-      let current = JSON.parse(window.sessionStorage.getItem("history"));
+    let storage_temp = JSON.parse(window.sessionStorage.getItem("history"));
+    console.log(name);
 
-      current[level] = [name, url]
+    storage_temp[level] = [name, url];
 
-      window.sessionStorage.setItem("history", JSON.stringify(current))
-    } catch {
-      console.log("run")
-    }
+    storage_temp = storage_temp.slice(0, level+1)
+
+    setStorage(storage_temp)
+    window.sessionStorage.setItem("history", JSON.stringify(storage_temp));
   }
 
   function reset(array) {
+    setStorage(array);
     window.sessionStorage.setItem("history", JSON.stringify(array));
   }
 

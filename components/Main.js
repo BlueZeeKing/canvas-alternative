@@ -4,14 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSchool } from "@fortawesome/free-solid-svg-icons";
 
 import Sidebar from "../components/Sidebar";
-import useSessionStorage from "../hooks/useSessionStorage";
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
 export default function Main(props) {
-  const [storage, set, push] = useSessionStorage();
-  console.log(storage)
   // TODO: Make fill work on mobile
   return (
     <Layout className="body">
@@ -45,7 +42,7 @@ export default function Main(props) {
         >
           {!props.breadcrumb ? (
             <Breadcrumb style={{ paddingBottom: "10px" }}>
-              {storage.map((item, index) => (
+              {props.history.map((item, index) => (
                 <Breadcrumb.Item key={index}>
                   <Link href={item[1]}>{item[0]}</Link>
                 </Breadcrumb.Item>
