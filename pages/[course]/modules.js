@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { Skeleton, Menu } from "antd";
 import Link from "next/link";
 import { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenRuler, faFile, faLink } from "@fortawesome/free-solid-svg-icons";
 
 const { SubMenu } = Menu;
 
@@ -32,9 +34,74 @@ export default function App() {
                 if (item.type == "SubHeader") {
                   return <Menu.ItemGroup key={item.id} title={item.title} />;
                 } else if (item.type == "Assignment") {
-                  return <Menu.Item key={item.id} style={{ paddingLeft: `${24 * item.indent + 48}px` }}><Link href={`/${router.query.course}/assignment/${item.content_id}?title=${router.query.title}`}>{item.title}</Link></Menu.Item>
+                  return (
+                    <Menu.Item
+                      key={item.id}
+                      style={{ paddingLeft: `${24 * item.indent + 48}px` }}
+                    >
+                      <Link
+                        href={`/${router.query.course}/assignment/${item.content_id}?title=${router.query.title}`}
+                        passHref
+                      >
+                        <div>
+                          <FontAwesomeIcon
+                            icon={faPenRuler}
+                            color="white"
+                            style={{ paddingRight: "8px" }}
+                          />
+                          {item.title}
+                        </div>
+                      </Link>
+                    </Menu.Item>
+                  );
+                } else if (item.type == "File") {
+                  return (
+                    <Menu.Item
+                      key={item.id}
+                      style={{ paddingLeft: `${24 * item.indent + 48}px` }}
+                    >
+                      <Link
+                        href={`/${router.query.course}/assignment/${item.content_id}?title=${router.query.title}`}
+                        passHref
+                      >
+                        <div>
+                          <FontAwesomeIcon
+                            icon={faFile}
+                            color="white"
+                            style={{ paddingRight: "8px" }}
+                          />
+                          {item.title}
+                        </div>
+                      </Link>
+                    </Menu.Item>
+                  );
+                } else if (item.type == "ExternalUrl") {
+                  return (
+                    <Menu.Item
+                      key={item.id}
+                      style={{ paddingLeft: `${24 * item.indent + 48}px` }}
+                    >
+                      <Link href={item.external_url} passHref>
+                        <div>
+                          <FontAwesomeIcon
+                            icon={faLink}
+                            color="white"
+                            style={{ paddingRight: "8px" }}
+                          />
+                          {item.title}
+                        </div>
+                      </Link>
+                    </Menu.Item>
+                  );
                 } else {
-                  return <Menu.Item key={item.id} style={{ paddingLeft: `${24 * item.indent + 48}px` }}><Link href="/">{item.title}</Link></Menu.Item>
+                  return (
+                    <Menu.Item
+                      key={item.id}
+                      style={{ paddingLeft: `${24 * item.indent + 48}px` }}
+                    >
+                      <Link href="/">{item.title}</Link>
+                    </Menu.Item>
+                  );
                 }
               })}
             </SubMenu>
