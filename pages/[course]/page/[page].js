@@ -17,7 +17,7 @@ export default function App() {
 
   useEffect(() => set("Page", `/${router.query.course}/page/${router.query.page}?title=${router.query.title}`, 3), []);
 
-  let page = useAPI(
+  const page = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/pages/${router.query.page}`,
     [["include", "items"]]

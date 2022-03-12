@@ -16,7 +16,7 @@ export default function App() {
   const router = useRouter();
   const [storage, set, reset] = useSessionStorage();
   // TODO: pass the course data along
-  let modules = useAPI(
+  const modules = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/modules`,
     [
@@ -64,7 +64,7 @@ export default function App() {
                       style={{ paddingLeft: `${24 * item.indent + 48}px` }}
                     >
                       <Link
-                        href={`/${router.query.course}/assignment/${item.content_id}?title=${router.query.title}`}
+                        href={`/${router.query.course}/file/${item.content_id}?title=${router.query.title}`}
                         passHref
                       >
                         <div>

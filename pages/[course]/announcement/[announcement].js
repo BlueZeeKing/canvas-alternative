@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Skeleton, Typography, Divider, Avatar, Space } from "antd";
+import { Skeleton, Typography, Divider, Avatar } from "antd";
 import DOMPurify from "dompurify";
 import { useEffect } from "react";
 
@@ -17,7 +17,7 @@ export default function App() {
 
   useEffect(() => set("Announcement", `/${router.query.course}/announcement/${router.query.announcement}?title=${router.query.title}`, 3), []);
 
-  let announcement = useAPI(
+  const announcement = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/discussion_topics/${router.query.announcement}`,
     [["include", "items"]]

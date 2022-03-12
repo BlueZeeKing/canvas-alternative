@@ -15,10 +15,13 @@ export default function App() {
 
   useEffect(() => set("Announcements", `/${router.query.course}/announcements?title=${router.query.title}`, 2), []);
 
-  let announcements = useAPI(
+  const announcements = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/discussion_topics`,
-    [["only_announcements", true], ["per_page", 50]]
+    [
+      ["only_announcements", true],
+      ["per_page", 50],
+    ]
   );
   let body;
   // TODO: make menu item group actually surround the items

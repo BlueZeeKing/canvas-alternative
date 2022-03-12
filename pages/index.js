@@ -10,7 +10,7 @@ import useSessionStorage from "../hooks/useSessionStorage";
 
 
 export default function Home() {
-  let courses = useAPI(
+  const courses = useAPI(
     process.env.API_KEY,
     "/courses",
     [

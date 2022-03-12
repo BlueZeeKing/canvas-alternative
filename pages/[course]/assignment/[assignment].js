@@ -17,7 +17,7 @@ export default function App() {
 
   useEffect(() => set("Assignment", `/${router.query.course}/assignment/${router.query.assignment}?title=${router.query.title}`, 3), []);
 
-  let assignment = useAPI(
+  const assignment = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/assignments/${router.query.assignment}`,
     [["include", "items"]]

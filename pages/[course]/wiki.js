@@ -14,7 +14,7 @@ export default function App() {
 
   useEffect(() => set("Home Page", `/${router.query.course}/wiki?title=${router.query.title}`, 2), []);
   
-  let home_page = useAPI(
+  const home_page = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/front_page`,
     []

@@ -1,6 +1,7 @@
 import "../styles/globals.css"
 import "antd/dist/antd.dark.css";
 import { useEffect } from "react";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 
 function MyApp({ Component, pageProps }) {
   /*useEffect(() => {

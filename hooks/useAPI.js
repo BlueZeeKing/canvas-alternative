@@ -5,6 +5,7 @@ export default function useAPI(key, url, query) {
   const [data, setData] = useState({})
   
   useEffect(() => {
+    console.log(`/api/canvas?url=${url}`);
     if (Object.keys(data).length == 0 && !url.includes("undefined")) {
       fetch(`/api/canvas?url=${url}`, {
         headers: {

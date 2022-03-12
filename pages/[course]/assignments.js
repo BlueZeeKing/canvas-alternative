@@ -15,7 +15,7 @@ export default function App() {
 
   useEffect(() => set("Assignments", `/${router.query.course}/assignments?title=${router.query.title}`, 2), []);
 
-  let assignments = useAPI(
+  const assignments = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/assignments`,
     [["per_page", "80"]]

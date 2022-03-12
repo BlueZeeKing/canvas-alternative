@@ -2,20 +2,23 @@ import { useEffect, useState } from "react";
 import { notification } from "antd";
 
 export default function useFile(key, id) {
-  const [data, setData] = useState({})
+  const [data, setData] = useState(undefined);
   
   useEffect(() => {
-    if (Object.keys(data).length == 0 && id != undefined) {
-      fetch(`/api/file?id=${id}`, {
+    if (!data && id != undefined) {
+      fetch(`/api/canvas?url=/files/${id}/public_url`, {
         headers: {
           Authorization: `Bearer ${key}`,
-          id: id
+          url: id,
+          query: JSON.stringify([]),
         },
       })
-        .then((res) => {
-          setData({"hello": "hi"})
-          console.log(res)
-        })
+        .then((res) => res.json())
+        .then((data) => {
+          fetch(`/api/file?url=${data.data.public_url}`)
+            .then((res) => res.arrayBuffer())
+            .then((data) => setData(data));
+        });
     }
   });
 
