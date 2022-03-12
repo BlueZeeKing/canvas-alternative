@@ -28,6 +28,11 @@ export default function Sidebar(props) {
             Announcements
           </Link>
         </Menu.Item>
+        <Menu.Item key="4">
+          <Link href={`/${props.course}/discussions?title=${props.name}`}>
+            Discussions
+          </Link>
+        </Menu.Item>
       </Menu>
     </Sider>
   );

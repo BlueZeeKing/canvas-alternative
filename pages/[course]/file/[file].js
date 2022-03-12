@@ -111,6 +111,8 @@ export async function getServerSideProps(context) {
     }
   );
 
+  const data = await res.json();
+
   const file = await fetch(
     `https://apsva.instructure.com/api/v1/files/${context.params.file}/public_url`,
     {
@@ -119,8 +121,6 @@ export async function getServerSideProps(context) {
       },
     }
   );
-
-  const data = await res.json();
 
   const fileData = await file.json();
 
