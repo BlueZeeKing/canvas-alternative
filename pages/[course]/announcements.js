@@ -18,7 +18,7 @@ export default function App() {
   let announcements = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/discussion_topics`,
-    [["only_announcements", true]]
+    [["only_announcements", true], ["per_page", 50]]
   );
   let body;
   // TODO: make menu item group actually surround the items

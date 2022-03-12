@@ -43,7 +43,7 @@ export default function Main(props) {
           {!props.breadcrumb && props.history ? (
             <Breadcrumb style={{ paddingBottom: "10px" }}>
               {props.history.map((item, index) => (
-                <Breadcrumb.Item key={index}>
+                item == null ? "" : <Breadcrumb.Item key={index}>
                   <Link href={item[1]}>{item[0]}</Link>
                 </Breadcrumb.Item>
               ))}

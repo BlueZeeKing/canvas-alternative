@@ -9,32 +9,23 @@ const { SubMenu } = Menu;
 
 import Main from "../../components/Main";
 import Header from "../../components/Header";
+import useFile from "../../hooks/useFile";
 import useAPI from "../../hooks/useAPI";
 
 export default function App() {
   const router = useRouter();
   const [url, setURL] = useState("")
   // TODO: pass the course data along
-  let modules = useAPI(
+  let assignment = useAPI(
     process.env.API_KEY,
-    `/files/${router.query.file}`,
+    `/files/${router.query.file}/public_url`,
     []
   );
   let body;
   // TODO: make menu item group actually surround the items
-  if (Object.keys(modules).length != 0) {
-    fetch(modules.data.url)
-      .then((res) => (
-        fetch(res.url)
-          .then((res) => (
-            console.log(res)
-            )
-          )
-      )
-    );
-  }
-  if (false) {
-    body = <Document file={url} />;
+  if (Object.keys(assignment).length != 0) {
+    console.log(new URLSearchParams([["include", "hello"]]).toString());
+    body = <Document file={`http://localhost:3000/api/file?${new URLSearchParams([["include", "hello"]]).toString()}`} />;
   } else {
     body = <Skeleton active />;
   }

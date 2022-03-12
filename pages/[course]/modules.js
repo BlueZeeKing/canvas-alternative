@@ -3,7 +3,7 @@ import { Skeleton, Menu } from "antd";
 import Link from "next/link";
 import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenRuler, faFile, faLink } from "@fortawesome/free-solid-svg-icons";
+import { faPenRuler, faFile, faLink, faNewspaper } from "@fortawesome/free-solid-svg-icons";
 
 const { SubMenu } = Menu;
 
@@ -19,7 +19,10 @@ export default function App() {
   let modules = useAPI(
     process.env.API_KEY,
     `/courses/${router.query.course}/modules`,
-    [["include", "items"]]
+    [
+      ["include", "items"],
+      ["per_page", 50],
+    ]
   );
   let body;
   useEffect(() => set("Modules", `/${router.query.course}/modules?title=${router.query.title}`, 2), []);
@@ -85,6 +88,24 @@ export default function App() {
                         <div>
                           <FontAwesomeIcon
                             icon={faLink}
+                            color="white"
+                            style={{ paddingRight: "8px" }}
+                          />
+                          {item.title}
+                        </div>
+                      </Link>
+                    </Menu.Item>
+                  );
+                } else if (item.type == "Page") {
+                  return (
+                    <Menu.Item
+                      key={item.id}
+                      style={{ paddingLeft: `${24 * item.indent + 48}px` }}
+                    >
+                      <Link href={`/${router.query.course}/page/${item.page_url}?title=${router.query.title}`} passHref>
+                        <div>
+                          <FontAwesomeIcon
+                            icon={faNewspaper}
                             color="white"
                             style={{ paddingRight: "8px" }}
                           />

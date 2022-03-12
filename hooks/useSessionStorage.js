@@ -5,7 +5,10 @@ export default function useSessionStorage() {
 
   function set(name, url, level) {
     let storage_temp = JSON.parse(window.sessionStorage.getItem("history"));
-    console.log(name);
+
+    if (!storage_temp) {
+      storage_temp = [["Home", '/']]
+    }
 
     storage_temp[level] = [name, url];
 

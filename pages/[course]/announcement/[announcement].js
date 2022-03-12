@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
-import { Skeleton, Typography, Divider } from "antd";
+import { Skeleton, Typography, Divider, Avatar, Space } from "antd";
 import DOMPurify from "dompurify";
 import { useEffect } from "react";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 import Main from "../../../components/Main";
 import Header from "../../../components/Header";
+import Center from "../../../components/Center";
 import useAPI from "../../../hooks/useAPI";
 import useSessionStorage from "../../../hooks/useSessionStorage";
 
@@ -30,7 +31,19 @@ export default function App() {
     }
     body = (
       <>
-        <Title>{announcement.data.title}</Title>
+        <div style={{ display: "flex", verticalAlign: "middle" }}>
+          <Title style={{ margin: 0 }}>{announcement.data.title}</Title>
+          <div style={{ flexGrow: 1 }}></div>
+          <Center height="46.73px">
+            <Text style={{marginRight:"10px"}}>{announcement.data.author.display_name}</Text>
+          </Center>
+          <Center height="46.73px">
+            <Avatar src={announcement.data.author.avatar_image_url} />
+          </Center>
+        </div>
+        <Text style={{color:"gray"}}>{new Date(Date.parse(announcement.data.posted_at)).toLocaleString("en-US", {
+          weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric'
+        })}</Text>
         <Divider />
         <div
           dangerouslySetInnerHTML={{
