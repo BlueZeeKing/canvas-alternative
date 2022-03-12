@@ -15,9 +15,7 @@ export default function useFile(key, id) {
       })
         .then((res) => res.json())
         .then((data) => {
-          fetch(`/api/file?url=${data.data.public_url}`)
-            .then((res) => res.arrayBuffer())
-            .then((data) => setData(data));
+          setData(data.data.public_url);
         });
     }
   });

@@ -24,14 +24,13 @@ import useSessionStorage from "../../../hooks/useSessionStorage";
 import useAPI from "../../../hooks/useAPI";
 
 export default function App() {
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [numPages, setNumPages] = useState([]);
   const [storage, set, reset] = useSessionStorage();
   const router = useRouter();
   const file = useFile(process.env.API_KEY, router.query.file);
   const fileData = useAPI(process.env.API_KEY, `/files/${router.query.file}`, []);
 
-  function onDocumentLoadSuccess({ numPages }) {
+  function onDocumentLoadSuccess({numPages}) {
     setNumPages(numPages);
   }
   
@@ -83,11 +82,13 @@ export default function App() {
           onLoadSuccess={onDocumentLoadSuccess}
           style={{ width: "100%" }}
         >
-          <Page
-            onLoadSuccess={removeTextLayerOffset}
-            pageNumber={pageNumber}
-            renderAnnotationLayer={true}
-          />
+          {Array.apply(null, {length: numPages}).map(Number.call, Number).map((item, index) => (
+            item == null ? "" : <Page
+              onLoadSuccess={removeTextLayerOffset}
+              pageNumber={index+1}
+              key={item}
+            />
+          ))}
         </Document>
       </>
     );
