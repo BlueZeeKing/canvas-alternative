@@ -5,72 +5,72 @@ import { useEffect } from "react";
 import Main from "../components/Main";
 import Header from "../components/Header";
 
-import useAPI from "../hooks/useAPI"
 import useSessionStorage from "../hooks/useSessionStorage";
 
-
-export default function Home() {
-  const courses = useAPI(
-    process.env.API_KEY,
-    "/courses",
-    [
-      ["per_page", 50],
-      ["enrollment_state", "active"],
-      ["state", "available"],
-      ["include", "favorites"],
-    ]
-  );
+export default function Home(props) {
 
   const [storage, set, reset] = useSessionStorage();
 
-  useEffect(() => reset([["Home", "/"]]), [])
+  useEffect(() => reset([["Home", "/"]]), []);
   // TODO: Make fill work on mobile
-  let body;
-  if (Object.keys(courses).length == 0) {
-    body = [1, 2, 3, 4, 5, 6, 7].map((item) => (
-      <Card
-        key={item}
-        title={<Skeleton active paragraph={false} />}
-        style={{ width: "300px", minHeight: "150px" }}
-      >
-        <Skeleton active title={false} />
-      </Card>
-    ));
-  } else {
-    body = courses.data
-      .filter((item) => item.is_favorite)
-      .map((item) => (
-        <Link
-          key={item.id}
-          href={`/${item.id}/${item.default_view}?title=${item.name}`}
-          passHref
-        >
-          <Card
-            title={item.name}
-            style={{ width: "300px", minHeight: "150px", cursor: "pointer" }}
-            onClick={() => {
-              set(
-                item.name,
-                `/${item.id}/${item.default_view}?title=${item.name}`,
-                1
-              );
-            }}
-          >
-            <p style={{ margin: 0 }}>{item.course_code}</p>
-            <p style={{ margin: 0 }}>{item.public_description}</p>
-          </Card>
-        </Link>
-      ));
-  }
   return (
     <>
       <Header />
 
       <Main history={storage} title="Dashboard" breadcrumb>
         <Space style={{ width: "100%", padding: "10px" }} wrap>
-          {body}
+          {props.data
+            .filter((item) => item.is_favorite)
+            .map((item) => (
+              <Link
+                key={item.id}
+                href={`/${item.id}/${item.default_view}?title=${item.name}`}
+                passHref
+              >
+                <Card
+                  title={item.name}
+                  style={{
+                    width: "300px",
+                    minHeight: "150px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    set(
+                      item.name,
+                      `/${item.id}/${item.default_view}?title=${item.name}`,
+                      1
+                    );
+                  }}
+                >
+                  <p style={{ margin: 0 }}>{item.course_code}</p>
+                  <p style={{ margin: 0 }}>{item.public_description}</p>
+                </Card>
+              </Link>
+            ))}
         </Space>
       </Main>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(
+    "https://apsva.instructure.com/api/v1/courses?per_page=50&enrollment_state=active&state=available&include=favorites",
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  // Pass data to the page via props
+  return {
+    props: {
+      data: data,
+      limit: res.headers.get("x-rate-limit-remaining"),
+    },
+  };
 }

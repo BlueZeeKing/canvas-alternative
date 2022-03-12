@@ -9,53 +9,59 @@ import Header from "../../components/Header";
 import useAPI from "../../hooks/useAPI";
 import useSessionStorage from "../../hooks/useSessionStorage";
 
-export default function App() {
+export default function App(props) {
   const router = useRouter();
   const [storage, set, reset] = useSessionStorage();
 
   useEffect(() => set("Announcements", `/${router.query.course}/announcements?title=${router.query.title}`, 2), []);
 
-  const announcements = useAPI(
-    process.env.API_KEY,
-    `/courses/${router.query.course}/discussion_topics`,
-    [
-      ["only_announcements", true],
-      ["per_page", 50],
-    ]
-  );
-  let body;
-  // TODO: make menu item group actually surround the items
-  console.log(announcements);
-  if (Object.keys(announcements).length != 0) {
-    if (!("errors" in announcements.data)) {
-      body = (
-        <Menu mode="inline">
-          <Menu.ItemGroup title="Announcements">
-            {announcements.data.map((announcement) => (
-              <Menu.Item key={announcement.id}>
-                <Link
-                  href={`/${router.query.course}/announcement/${announcement.id}?title=${router.query.title}`}
-                >
-                  {announcement.title}
-                </Link>
-              </Menu.Item>
-            ))}
-          </Menu.ItemGroup>
-        </Menu>
-      );
-    } else {
-      body = <Skeleton active />;
-    }
-  } else {
-    body = <Skeleton active />;
-  }
   return (
     <>
       <Header />
 
-      <Main history={storage} title={router.query.title} course={router.query.course}>
-        <div style={{ padding: "10px" }}>{body}</div>
+      <Main
+        history={storage}
+        title={router.query.title}
+        course={router.query.course}
+      >
+        <div style={{ padding: "10px" }}>
+          <Menu mode="inline">
+            <Menu.ItemGroup title="Announcements">
+              {props.data.map((announcement) => (
+                <Menu.Item key={announcement.id}>
+                  <Link
+                    href={`/${router.query.course}/announcement/${announcement.id}?title=${router.query.title}`}
+                  >
+                    {announcement.title}
+                  </Link>
+                </Menu.Item>
+              ))}
+            </Menu.ItemGroup>
+          </Menu>
+        </div>
       </Main>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  // Fetch data from external API
+  const res = await fetch(
+    `https://apsva.instructure.com/api/v1/courses/${context.params.course}/discussion_topics?per_page=50&only_announcements=true`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  // Pass data to the page via props
+  return {
+    props: {
+      data: data,
+      limit: res.headers.get("x-rate-limit-remaining"),
+    },
+  };
 }

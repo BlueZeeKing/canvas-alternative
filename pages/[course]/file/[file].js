@@ -19,16 +19,12 @@ const { Title, Text } = Typography;
 import Main from "../../../components/Main";
 import Header from "../../../components/Header";
 import Center from "../../../components/Center";
-import useFile from "../../../hooks/useFile";
 import useSessionStorage from "../../../hooks/useSessionStorage";
-import useAPI from "../../../hooks/useAPI";
 
-export default function App() {
+export default function App(props) {
   const [numPages, setNumPages] = useState([]);
   const [storage, set, reset] = useSessionStorage();
   const router = useRouter();
-  const file = useFile(process.env.API_KEY, router.query.file);
-  const fileData = useAPI(process.env.API_KEY, `/files/${router.query.file}`, []);
 
   function onDocumentLoadSuccess({numPages}) {
     setNumPages(numPages);
@@ -44,64 +40,96 @@ export default function App() {
     });
   }
 
-  useEffect(() => set("File", `/${router.query.course}/file/${router.query.file}?title=${router.query.title}`, 3), []);
+  useEffect(() => set(props.data.display_name, `/${router.query.course}/file/${router.query.file}?title=${router.query.title}`, 3), []);
 
-  let body;
-  
-  if (file && Object.keys(fileData).length != 0) {
-    console.log(fileData);
-    if (storage[3][0] == "File") {
-      set(fileData.data.display_name, `/${router.query.course}/file/${router.query.file}?title=${router.query.title}`, 3);
-    }
-
-    body = (
-      <>
-        <div style={{ display: "flex", verticalAlign: "middle" }}>
-          <Title style={{ margin: 0 }}>{fileData.data.display_name}</Title>
-          <div style={{ flexGrow: 1 }}></div>
-          <Center height="46.73px">
-            <Link href={fileData.data.url}>Click to download</Link>
-          </Center>
-        </div>
-        <Text style={{ color: "gray" }}>
-          {new Date(Date.parse(fileData.data.created_at)).toLocaleString(
-            "en-US",
-            {
-              weekday: "short",
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            }
-          )}
-        </Text>
-        <Divider />
-        <Document
-          file={file}
-          onLoadSuccess={onDocumentLoadSuccess}
-          style={{ width: "100%" }}
-        >
-          {Array.apply(null, {length: numPages}).map(Number.call, Number).map((item, index) => (
-            item == null ? "" : <Page
-              onLoadSuccess={removeTextLayerOffset}
-              pageNumber={index+1}
-              key={item}
-            />
-          ))}
-        </Document>
-      </>
-    );
-  } else {
-    body = <Skeleton active />;
-  }
   return (
     <>
       <Header />
 
-      <Main history={storage} title={router.query.title} course={router.query.course} page>
-        <div style={{ padding: "10px" }}>{body}</div>
+      <Main
+        history={storage}
+        title={router.query.title}
+        course={router.query.course}
+        page
+      >
+        <div style={{ padding: "10px" }}>
+          <div style={{ display: "flex", verticalAlign: "middle" }}>
+            <Title style={{ margin: 0 }}>{props.data.display_name}</Title>
+            <div style={{ flexGrow: 1 }}></div>
+            <Center height="46.73px">
+              <Link href={props.data.url}>Click to download</Link>
+            </Center>
+          </div>
+          <Text style={{ color: "gray" }}>
+            {new Date(Date.parse(props.data.created_at)).toLocaleString(
+              "en-US",
+              {
+                weekday: "short",
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              }
+            )}
+          </Text>
+          <Divider />
+          <Document
+            file={props.url}
+            onLoadSuccess={onDocumentLoadSuccess}
+            style={{ width: "100%" }}
+          >
+            {Array.apply(null, { length: numPages })
+              .map(Number.call, Number)
+              .map((item, index) =>
+                item == null ? (
+                  ""
+                ) : (
+                  <Page
+                    onLoadSuccess={removeTextLayerOffset}
+                    pageNumber={index + 1}
+                    key={item}
+                    className="page-padding"
+                  />
+                )
+              )}
+          </Document>
+        </div>
       </Main>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  // Fetch data from external API
+  const res = await fetch(
+    `https://apsva.instructure.com/api/v1/files/${context.params.file}`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+    }
+  );
+
+  const file = await fetch(
+    `https://apsva.instructure.com/api/v1/files/${context.params.file}/public_url`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.API_KEY}`,
+      },
+    }
+  );
+
+  const data = await res.json();
+
+  const fileData = await file.json();
+
+  // Pass data to the page via props
+  return {
+    props: {
+      url: fileData.public_url,
+      data: data,
+      limit: res.headers.get("x-rate-limit-remaining"),
+    },
+  };
 }

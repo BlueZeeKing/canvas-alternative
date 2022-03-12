@@ -35,10 +35,11 @@ export default function Main(props) {
         <Sidebar course={props.course} name={props.title} />
         <div
           style={{
-            overflowY: "scroll",
+            overflow: "scroll",
             padding: "10px",
             width: "100%",
           }}
+          className="scroll"
         >
           {!props.breadcrumb && props.history ? (
             <Breadcrumb style={{ paddingBottom: "10px" }}>
