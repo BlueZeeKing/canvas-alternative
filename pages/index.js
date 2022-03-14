@@ -22,6 +22,7 @@ export default function Home(props) {
         title="Dashboard"
         breadcrumb
         rate_limit={props.limit}
+        tabs={[]}
       >
         <Space style={{ width: "100%", padding: "10px" }} wrap>
           {props.data

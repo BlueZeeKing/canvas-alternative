@@ -22,6 +22,7 @@ export default function App(props) {
         page
         course={router.query.course}
         rate_limit={props.limit}
+        tabs={props.tabs}
       >
         <div style={{ padding: "10px" }}>
           <div
@@ -39,22 +40,33 @@ export default function App(props) {
 
 export async function getServerSideProps(context) {
   // Fetch data from external API
-  const res = await fetch(
-    `https://apsva.instructure.com/api/v1/courses/${context.params.course}/front_page`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-    }
-  );
+  const [res, tabsRaw] = await Promise.all([
+    fetch(
+      `https://apsva.instructure.com/api/v1/courses/${context.params.course}/front_page`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
+    ),
+    fetch(
+      `https://apsva.instructure.com/api/v1/courses/${context.params.course}/tabs`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
+    ),
+  ]);
 
-  const data = await res.json();
+  const [data, tabs] = await Promise.all([res.json(), tabsRaw.json()]); 
 
   // Pass data to the page via props
   return {
     props: {
       data: data,
       limit: res.headers.get("x-rate-limit-remaining"),
+      tabs: tabs,
     },
   };
 }

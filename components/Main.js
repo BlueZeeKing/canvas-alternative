@@ -11,7 +11,7 @@ const { Title } = Typography;
 
 export default function Main(props) {
   useEffect(() => {
-    if (parseInt(props.rate_limit) < 700) {
+    if (parseInt(props.rate_limit) < 50) {
     notification.warning({
       message: "Please Slow Down",
       description: `You are currently using ${
@@ -42,7 +42,7 @@ export default function Main(props) {
         </Space>
       </Header>
       <Layout>
-        <Sidebar course={props.course} name={props.title} />
+        <Sidebar course={props.course} name={props.title} tabs={props.tabs} />
         <div
           style={{
             overflow: "scroll",

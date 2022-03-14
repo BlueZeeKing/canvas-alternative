@@ -8,32 +8,32 @@ export default function Sidebar(props) {
   return (
     <Sider>
       <Menu mode="inline" style={{ minHeight: "100%" }}>
-        <Menu.Item key="0">
-          <Link href={`/${props.course}/wiki?title=${props.name}`}>
-            Home Page
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="1">
-          <Link href={`/${props.course}/modules?title=${props.name}`}>
-            Modules
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="2">
-          <Link href={`/${props.course}/assignments?title=${props.name}`}>
-            Assignments
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="3">
-          <Link href={`/${props.course}/announcements?title=${props.name}`}>
-            Announcements
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="4">
-          <Link href={`/${props.course}/discussions?title=${props.name}`}>
-            Discussions
-          </Link>
-        </Menu.Item>
+        {props.tabs.length > 0
+          ? props.tabs
+              .filter((item) => item.type == "internal")
+              .map((item) => (
+                <Menu.Item key={item.id}>
+                  <Link href={url(props.course, item)}>{item.label}</Link>
+                </Menu.Item>
+              ))
+          : ""}
       </Menu>
     </Sider>
   );
+}
+
+function url(course, item) {
+  if (item.id == "home") {
+    return `/${course}/wiki`
+  } else if (item.id == "announcements") {
+    return `/${course}/announcements`
+  } else if (item.id == "modules") {
+    return `/${course}/modules`;
+  } else if (item.id == "assignments") {
+    return `/${course}/assignments`;
+  } else if (item.id == "discussions") {
+    return `/${course}/discussions`;
+  } else {
+    return item.full_url;
+  }
 }

@@ -52,6 +52,7 @@ export default function App(props) {
         course={router.query.course}
         page
         rate_limit={props.limit}
+        tabs={props.tabs}
       >
         <div style={{ padding: "10px" }}>
           <div style={{ display: "flex", verticalAlign: "middle" }}>
@@ -102,12 +103,23 @@ export default function App(props) {
 }
 
 export async function getServerSideProps(context) {
-  const [res, file] = await Promise.all([
-    fetch(`https://apsva.instructure.com/api/v1/files/${context.params.file}`, {
-      headers: {
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-    }),
+  const [res, tabsRaw, file] = await Promise.all([
+    fetch(
+      `https://apsva.instructure.com/api/v1/files/${context.params.file}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
+    ),
+    fetch(
+      `https://apsva.instructure.com/api/v1/courses/${context.params.course}/tabs`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
+    ),
     fetch(
       `https://apsva.instructure.com/api/v1/files/${context.params.file}/public_url`,
       {
@@ -118,7 +130,7 @@ export async function getServerSideProps(context) {
     ),
   ]);
 
-  const [data, fileData] = await Promise.all([res.json(), file.json()]);
+  const [data, fileData, tabs] = await Promise.all([res.json(), file.json(), tabsRaw.json()]);
 
   // Pass data to the page via props
   return {
@@ -126,6 +138,7 @@ export async function getServerSideProps(context) {
       url: fileData.public_url,
       data: data,
       limit: res.headers.get("x-rate-limit-remaining"),
+      tabs: tabs,
     },
   };
 }
