@@ -22,6 +22,7 @@ export default function App(props) {
         history={storage}
         title={router.query.title}
         course={router.query.course}
+        rate_limit={props.limit}
       >
         <div style={{ padding: "10px" }}>
           <Menu mode="inline">

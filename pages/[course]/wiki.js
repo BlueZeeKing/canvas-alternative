@@ -21,6 +21,7 @@ export default function App(props) {
         title={router.query.title}
         page
         course={router.query.course}
+        rate_limit={props.limit}
       >
         <div style={{ padding: "10px" }}>
           <div

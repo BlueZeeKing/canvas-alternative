@@ -51,6 +51,7 @@ export default function App(props) {
         title={router.query.title}
         course={router.query.course}
         page
+        rate_limit={props.limit}
       >
         <div style={{ padding: "10px" }}>
           <div style={{ display: "flex", verticalAlign: "middle" }}>
@@ -101,28 +102,23 @@ export default function App(props) {
 }
 
 export async function getServerSideProps(context) {
-  // Fetch data from external API
-  const res = await fetch(
-    `https://apsva.instructure.com/api/v1/files/${context.params.file}`,
-    {
+  const [res, file] = await Promise.all([
+    fetch(`https://apsva.instructure.com/api/v1/files/${context.params.file}`, {
       headers: {
         Authorization: `Bearer ${process.env.API_KEY}`,
       },
-    }
-  );
+    }),
+    fetch(
+      `https://apsva.instructure.com/api/v1/files/${context.params.file}/public_url`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
+    ),
+  ]);
 
-  const data = await res.json();
-
-  const file = await fetch(
-    `https://apsva.instructure.com/api/v1/files/${context.params.file}/public_url`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-    }
-  );
-
-  const fileData = await file.json();
+  const [data, fileData] = await Promise.all([res.json(), file.json()]);
 
   // Pass data to the page via props
   return {

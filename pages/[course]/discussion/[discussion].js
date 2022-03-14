@@ -62,6 +62,7 @@ export default function App(props) {
         title={router.query.title}
         course={router.query.course}
         page
+        rate_limit={props.limit}
       >
         <div style={{ padding: "10px" }}>
           <div style={{ display: "flex", verticalAlign: "middle" }}>
@@ -148,7 +149,11 @@ export default function App(props) {
                   ? [
                       <Tooltip key="comment-like" title="Like">
                         <span onClick={() => setLikes(item, index)}>
-                          {like[item.id] == 1 ? <LikeFilled /> : <LikeOutlined />}
+                          {like[item.id] == 1 ? (
+                            <LikeFilled />
+                          ) : (
+                            <LikeOutlined />
+                          )}
                           &nbsp;
                           <span className="comment-action">
                             {likes[index] + item.id in like ? like[item.id] : 0}
@@ -167,28 +172,28 @@ export default function App(props) {
 }
 
 export async function getServerSideProps(context) {
+
+  const [res, entries] = await Promise.all([
+    fetch(
+      `https://apsva.instructure.com/api/v1/courses/${context.params.course}/discussion_topics/${context.params.discussion}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
+    ),
+    fetch(
+      `https://apsva.instructure.com/api/v1/courses/${context.params.course}/discussion_topics/${context.params.discussion}/view`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.API_KEY}`,
+        },
+      }
+    ),
+  ]);
   // Fetch data from external API
-  const res = await fetch(
-    `https://apsva.instructure.com/api/v1/courses/${context.params.course}/discussion_topics/${context.params.discussion}`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-    }
-  );
 
-  const data = await res.json();
-
-  const entries = await fetch(
-    `https://apsva.instructure.com/api/v1/courses/${context.params.course}/discussion_topics/${context.params.discussion}/view`,
-    {
-      headers: {
-        Authorization: `Bearer ${process.env.API_KEY}`,
-      },
-    }
-  );
-
-  const entries_data = await entries.json();
+  const [data, entries_data] = await Promise.all([res.json(), entries.json()]);
 
   // Pass data to the page via props
   return {

@@ -24,6 +24,7 @@ export default function App(props) {
         history={storage}
         title={router.query.title}
         course={router.query.course}
+        rate_limit={props.limit}
       >
         <div style={{ padding: "10px" }}>
           <Menu mode="inline">
@@ -31,9 +32,7 @@ export default function App(props) {
               <SubMenu key={module.id} title={module.name}>
                 {module.items.map((item) => {
                   if (item.type == "SubHeader") {
-                    return (
-                      <Menu.ItemGroup key={item.id} title={item.title} />
-                    );
+                    return <Menu.ItemGroup key={item.id} title={item.title} />;
                   } else if (item.type == "Assignment") {
                     return (
                       <Menu.Item

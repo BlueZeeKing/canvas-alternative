@@ -17,7 +17,12 @@ export default function Home(props) {
     <>
       <Header />
 
-      <Main history={storage} title="Dashboard" breadcrumb>
+      <Main
+        history={storage}
+        title="Dashboard"
+        breadcrumb
+        rate_limit={props.limit}
+      >
         <Space style={{ width: "100%", padding: "10px" }} wrap>
           {props.data
             .filter((item) => item.is_favorite)

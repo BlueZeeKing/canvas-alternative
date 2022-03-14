@@ -1,7 +1,8 @@
-import { Layout, Typography, Space, Breadcrumb, BackTop } from "antd";
+import { Layout, Typography, Space, Breadcrumb, BackTop, notification } from "antd";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSchool } from "@fortawesome/free-solid-svg-icons";
+import { useEffect } from "react";
 
 import Sidebar from "../components/Sidebar";
 
@@ -9,7 +10,16 @@ const { Header, Content } = Layout;
 const { Title } = Typography;
 
 export default function Main(props) {
-  // TODO: Make fill work on mobile
+  useEffect(() => {
+    if (parseInt(props.rate_limit) < 700) {
+    notification.warning({
+      message: "Please Slow Down",
+      description: `You are currently using ${
+        700 - parseInt(props.rate_limit)
+      } out of 700 of your alloted quota. Please slow down.`,
+    });
+  }
+  }, [])
   return (
     <Layout className="body">
       <Header>
