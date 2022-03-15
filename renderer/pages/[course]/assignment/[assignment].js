@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import { Skeleton, Typography, Divider, Empty } from "antd";
+import { Skeleton, Typography, Divider, Empty, Upload, Button, message } from "antd";
 import DOMPurify from "isomorphic-dompurify";
 import { useEffect } from "react";
+import { UploadOutlined } from '@ant-design/icons';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -74,6 +75,29 @@ export default function App(props) {
             ></div>
           ) : (
             <Empty />
+          )}
+          <Divider />
+          {props.data.submission_types == "online_upload" ? (
+            <Upload
+              name="submission"
+              action={`/api/upload`}
+              headers={{
+                Authorization: `Bearer ${process.env.API_KEY}`,
+              }}
+              onChange={(info) => {
+                if (info.file.status === "done") {
+                  message.success(
+                    `${info.file.name} file uploaded successfully`
+                  );
+                } else if (info.file.status === "error") {
+                  message.error(`${info.file.name} file upload failed.`);
+                }
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+          ) : (
+            ""
           )}
         </div>
       </Main>
