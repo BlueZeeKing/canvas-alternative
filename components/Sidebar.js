@@ -2,7 +2,6 @@ import { Layout, Menu } from "antd";
 import Link from "next/link";
 
 const { Sider } = Layout;
-const { SubMenu } = Menu;
 
 export default function Sidebar(props) {
   return (
